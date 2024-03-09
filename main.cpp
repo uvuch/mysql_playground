@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
+#include <string>
 
 #include "mysql_connection.h"
 #include <cppconn/driver.h>
@@ -9,9 +10,18 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char** argv) {
+    if (argc < 4) {
+        cout << "Usage: " << argv[0] << " <address>:<port> <username> <password>";
+        cout << endl;
+        return 1;
+    }
+
     cout << endl;
     cout << "Running 'SELECT 'Hello World!' AS _message'..." << endl;
+
+    std::string addr = "tcp://";
+    addr += argv[1];
 
     try {
         sql::Driver *driver;
@@ -21,7 +31,7 @@ int main() {
 
         /* Create a connection */
         driver = get_driver_instance();
-        con = driver->connect("tcp://127.0.0.1:3306", "root", "t!nkMore");
+        con = driver->connect(addr, argv[2], argv[3]);
         /* Connect to the MySQL test database */
         con->setSchema("test");
 
